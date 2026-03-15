@@ -48,7 +48,7 @@ services:
       SMTP_FROM: ${SMTP_FROM}
       FRONTEND_URL: ${FRONTEND_URL}
     ports:
-      - '3001:3001'
+      - '${API_PORT:-3001}:3001'
 
   web:
     build:
@@ -61,7 +61,7 @@ services:
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     ports:
-      - '3000:3000'
+      - '${WEB_PORT:-3000}:3000'
 
 volumes:
   postgres_data:
