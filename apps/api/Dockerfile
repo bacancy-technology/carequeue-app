@@ -9,6 +9,7 @@ FROM base AS builder
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npx prisma generate
+RUN echo "=== src files ===" && find src -name "*.ts" 2>/dev/null | wc -l || echo "src NOT FOUND"
 RUN npm run build && ls dist/main.js
 
 FROM base AS runner
