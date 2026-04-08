@@ -64,7 +64,7 @@ export class AppointmentsService {
     if (!doctor) throw new NotFoundException('Doctor not found');
 
     // 2. Validate doctor availability for this day of week
-    const dayOfWeek = scheduledAt.getDay();
+    const dayOfWeek = scheduledAt.getUTCDay();
     const avail = doctor.availability.find((a) => a.dayOfWeek === dayOfWeek);
     if (!avail || !avail.isAvailable) {
       throw new BadRequestException(
@@ -73,7 +73,7 @@ export class AppointmentsService {
     }
 
     // 3. Validate appointment time within availability window
-    const apptMinutes = scheduledAt.getHours() * 60 + scheduledAt.getMinutes();
+    const apptMinutes = scheduledAt.getUTCHours() * 60 + scheduledAt.getUTCMinutes();
     const [startH, startM] = avail.startTime.split(':').map(Number);
     const [endH, endM] = avail.endTime.split(':').map(Number);
     const availStart = startH * 60 + startM;
@@ -203,13 +203,13 @@ export class AppointmentsService {
       where: { id: appt.doctor.id },
       include: { availability: true },
     });
-    const dayOfWeek = scheduledAt.getDay();
+    const dayOfWeek = scheduledAt.getUTCDay();
     const avail = doctor!.availability.find((a) => a.dayOfWeek === dayOfWeek);
     if (!avail || !avail.isAvailable) {
       throw new BadRequestException(`Doctor is not available on ${this.dayName(dayOfWeek)}`);
     }
 
-    const apptMinutes = scheduledAt.getHours() * 60 + scheduledAt.getMinutes();
+    const apptMinutes = scheduledAt.getUTCHours() * 60 + scheduledAt.getUTCMinutes();
     const [startH, startM] = avail.startTime.split(':').map(Number);
     const [endH, endM] = avail.endTime.split(':').map(Number);
     if (apptMinutes < startH * 60 + startM || apptMinutes + duration > endH * 60 + endM) {

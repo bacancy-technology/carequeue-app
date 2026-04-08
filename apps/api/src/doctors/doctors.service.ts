@@ -236,7 +236,7 @@ export class DoctorsService {
     await this.ensureExists(doctorId);
 
     const date = new Date(query.date);
-    const dayOfWeek = date.getDay(); // 0=Sun … 6=Sat
+    const dayOfWeek = date.getUTCDay(); // 0=Sun … 6=Sat
     const slotDuration = query.slotDuration ?? 30;
 
     // Find availability for this day
@@ -334,7 +334,7 @@ export class DoctorsService {
     const end = endH * 60 + endM;
 
     while (cur + duration <= end) {
-      const slotDate = new Date(`${dateStr}T${this.pad(Math.floor(cur / 60))}:${this.pad(cur % 60)}:00`);
+      const slotDate = new Date(`${dateStr}T${this.pad(Math.floor(cur / 60))}:${this.pad(cur % 60)}:00Z`);
       const slotEnd = cur + duration;
 
       const isBooked = booked.some((b) => {

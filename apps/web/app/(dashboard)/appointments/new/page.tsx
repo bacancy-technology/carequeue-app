@@ -95,13 +95,12 @@ export default function NewAppointmentPage() {
 
   const book = useMutation({
     mutationFn: () => {
-      const [hours, minutes] = selectedSlot.split(':').map(Number);
-      const dt = new Date(`${selectedDate}T00:00:00`);
-      dt.setHours(hours, minutes, 0, 0);
+      // Build the ISO string directly so the time is treated as UTC on the
+      // server (avoids browser timezone offset shifting the hour/day).
       return appointmentsApi.create({
         patientId: selectedPatient!.id,
         doctorId: selectedDoctor!.id,
-        scheduledAt: dt.toISOString(),
+        scheduledAt: `${selectedDate}T${selectedSlot}:00.000Z`,
         duration,
         reason,
         notes: notes || undefined,

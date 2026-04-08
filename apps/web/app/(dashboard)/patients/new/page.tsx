@@ -7,14 +7,12 @@ import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { patientsApi } from '../../../../lib/api/patients';
-import { PasswordInput } from '../../../../components/ui/password-input';
 import { formatPhone, PHONE_REGEX, PHONE_MESSAGE } from '../../../../lib/utils/phone';
 
 const schema = z.object({
   firstName:        z.string().min(1, 'Required').max(50, 'Too long'),
   lastName:         z.string().min(1, 'Required').max(50, 'Too long'),
   email:            z.string().email('Invalid email'),
-  password:         z.string().min(8, 'Min 8 characters'),
   dateOfBirth:      z.string().min(1, 'Required'),
   gender:           z.enum(['MALE', 'FEMALE', 'OTHER']),
   phone:            z.string().regex(PHONE_REGEX, PHONE_MESSAGE),
@@ -110,9 +108,7 @@ export default function NewPatientPage() {
           <Field label="Email" error={errors.email?.message}>
             <input type="email" {...register('email')} className={inputCls} placeholder="patient@email.com" />
           </Field>
-          <Field label="Password" error={errors.password?.message}>
-            <PasswordInput {...register('password')} className={inputCls} placeholder="Min 8 characters" />
-          </Field>
+          <p className="text-xs text-[#6B7280]">A temporary password will be auto-generated and sent to the patient's email.</p>
         </div>
 
         {/* Medical */}
